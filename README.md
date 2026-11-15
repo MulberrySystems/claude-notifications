@@ -11,8 +11,8 @@ that session**, even with several windows and a dozen tabs open.
 <!-- screenshot: docs/screenshot.png -->
 
 - Titled with the terminal tab title, so you know which session it is before you look.
-- Carries a per-project image: drop a `.claude/notification.png` into a repo and its notifications
-  show it, so you can tell projects apart at a glance.
+- Carries an image you choose per repository, with a global default, so you can tell projects
+  apart at a glance. See [Notification images](#notification-images).
 - Silent while you are already looking at that terminal in a focused VS Code window.
 - Silent when a turn only pauses to wait for a subagent or workflow; you hear from it once the
   main agent is really done.
@@ -46,13 +46,37 @@ Then, once:
 
 To check, run `/hooks` in Claude Code and start a turn; you should get a notification when it ends.
 
-## Per-project image
+## Notification images
 
-Put an image at `.claude/notification.png` (or `.jpg`, `.jpeg`, `.gif`) in a project and every
-notification from a session in that project shows it on the right of the banner. The hook looks
-for the file from the session folder upwards, so a repo inside a bigger workspace can have its own,
-and `~/.claude/notification.png` becomes the default for everything else. This repo ships one as
-an example. Square images around 256 to 512 px look best.
+Every notification can carry an image on the right of the banner, chosen per repository, so you
+can tell projects apart at a glance. Two examples ship in [`docs/examples/`](docs/examples/):
+
+| Example 1: `pixel-creature.png` | Example 2: `meme-man.png` |
+|:---:|:---:|
+| <img src="docs/examples/pixel-creature.png" width="128" alt="pixel creature"> | <img src="docs/examples/meme-man.png" width="128" alt="Meme Man"> |
+
+**Per repository.** Put the image at `.claude/notification.png` (or `.jpg`, `.jpeg`, `.gif`) in
+the repo. Sessions started anywhere inside that repo use it. This repo does exactly that with
+example 1:
+
+```bash
+mkdir -p .claude
+cp /path/to/your-image.png .claude/notification.png
+```
+
+**Default for everything else.** Put one at `~/.claude/notification.png`. Any session whose
+project has no image of its own falls back to it. To make example 2 the default:
+
+```bash
+cp docs/examples/meme-man.png ~/.claude/notification.png
+```
+
+**How the lookup works.** The hook walks from the session folder upwards and takes the first
+`.claude/notification.*` it finds, so a repo inside a bigger workspace can have its own image
+while the workspace sets one for the rest, and the home folder's `.claude` is the last stop.
+No file anywhere means a banner without an image. Changes take effect on the next notification;
+nothing needs restarting. Square images around 256 to 512 px look best; WebP is not accepted by
+macOS, convert it first with `sips -s format png in.webp --out notification.png`.
 
 The icon on the left is a different matter: macOS always takes it from the sending app bundle,
 and it cannot be set per notification.
@@ -110,7 +134,7 @@ Debug log: `~/.claude/terminal-focus.log` (written by the extension and the clic
   "viewing" even with the panel collapsed; the reverse (a different terminal tab active) counts as
   not viewing.
 - **The icon is a generic terminal.** macOS takes the icon from the sending app bundle; it cannot
-  be changed from here. The image on the right can, see [Per-project image](#per-project-image).
+  be changed from here. The image on the right can, see [Notification images](#notification-images).
 - **My image does not show.** Check the file name and that it sits in `.claude/` of the project or
   of a parent folder. terminal-notifier reports an unreadable file on stderr; run the hook by hand
   to see it.
