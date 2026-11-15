@@ -95,12 +95,16 @@ Homebrew's terminal-notifier in place.
 
 ## How it works
 
-```
-Claude Code ──hook──▶ claude-ping.py ──▶ terminal-notifier ──click──▶ focus-terminal.py
-                           ▲                                               │
-                           │ reads                                         │ code <root>
-                           │                                               ▼
-                 ~/.claude/vscode-windows.json ◀──writes── VS Code extension ──▶ terminal.show()
+```mermaid
+flowchart LR
+    CC[Claude Code] -- "Notification / Stop hook" --> PING["claude-ping.py"]
+    PING -- "posts banner" --> TN[terminal-notifier]
+    TN -- "click" --> FOCUS["focus-terminal.py"]
+    FOCUS -- "code &lt;root&gt; + vscode:// URI" --> EXT[VS Code extension]
+    EXT -- "terminal.show()" --> TERM[Session terminal]
+    EXT -- "writes" --> STATE[("~/.claude/vscode-windows.json")]
+    STATE -. "reads: am I viewing?" .-> PING
+    STATE -. "reads: which window?" .-> FOCUS
 ```
 
 - **`hooks/claude-ping.py`** runs on the `Notification` and `Stop` hook events. It builds the
