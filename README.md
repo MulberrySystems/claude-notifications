@@ -8,7 +8,7 @@ A macOS notification when a [Claude Code](https://docs.anthropic.com/en/docs/cla
 needs your input or finishes a turn. **Click it and VS Code jumps to the exact terminal that runs
 that session**, even with several windows and a dozen tabs open.
 
-<!-- screenshot: docs/screenshot.png -->
+<p align="center"><img src="docs/examples/banner-meme-man.png" width="560" alt="macOS banner: ✻ Git user identity, Prompt finished in claude-notifications, with a Meme Man image on the right"></p>
 
 - Titled with the terminal tab title, so you know which session it is before you look.
 - Carries an image you choose per repository, with a global default, so you can tell projects
@@ -49,15 +49,18 @@ To check, run `/hooks` in Claude Code and start a turn; you should get a notific
 ## Notification images
 
 Every notification can carry an image on the right of the banner, chosen per repository, so you
-can tell projects apart at a glance. Two examples ship in [`docs/examples/`](docs/examples/):
+can tell projects apart at a glance. Two banners from the same machine:
 
-| Example 1: `pixel-creature.png` | Example 2: `meme-man.png` |
+| Example 1: a global default | Example 2: this repo's own image |
 |:---:|:---:|
-| <img src="docs/examples/pixel-creature.png" width="128" alt="pixel creature"> | <img src="docs/examples/meme-man.png" width="128" alt="Meme Man"> |
+| <img src="docs/examples/banner-meme-man.png" width="380" alt="banner with Meme Man"> | <img src="docs/examples/banner-pixel-creature.png" width="380" alt="banner with a pixel creature"> |
+
+Example 2 uses [`docs/examples/pixel-creature.png`](docs/examples/pixel-creature.png), which this
+repo also keeps at `.claude/notification.png`, so sessions in it get the creature while every
+other project on the machine gets the default from example 1.
 
 **Per repository.** Put the image at `.claude/notification.png` (or `.jpg`, `.jpeg`, `.gif`) in
-the repo. Sessions started anywhere inside that repo use it. This repo does exactly that with
-example 1:
+the repo. Sessions started anywhere inside that repo use it:
 
 ```bash
 mkdir -p .claude
@@ -65,10 +68,10 @@ cp /path/to/your-image.png .claude/notification.png
 ```
 
 **Default for everything else.** Put one at `~/.claude/notification.png`. Any session whose
-project has no image of its own falls back to it. To make example 2 the default:
+project has no image of its own falls back to it:
 
 ```bash
-cp docs/examples/meme-man.png ~/.claude/notification.png
+cp /path/to/your-image.png ~/.claude/notification.png
 ```
 
 **How the lookup works.** The hook walks from the session folder upwards and takes the first
