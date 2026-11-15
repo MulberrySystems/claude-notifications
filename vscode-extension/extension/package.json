@@ -1,0 +1,13 @@
+{
+  "name": "claude-terminal-focus",
+  "displayName": "Claude terminal focus",
+  "description": "Focus the integrated terminal that owns a given shell pid (used by the Claude Code notification hook).",
+  "publisher": "mulberrysystems",
+  "version": "0.2.0",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/MulberrySystems/claude-notifications" },
+  "engines": { "vscode": "^1.80.0" },
+  "categories": ["Other"],
+  "main": "./extension.js",
+  "activationEvents": ["onUri", "onStartupFinished"]
+}
