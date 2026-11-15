@@ -12,12 +12,36 @@ Nothing is shown while a focused VS Code window has this session's terminal acti
 - notification: "Claude needs your attention in <folder> (<sid>)!" with the Glass sound.
 - stop: nothing while a subagent or workflow of the session is still running (the main agent only
   paused to wait for it); otherwise "Prompt finished in <folder> (<sid>)" with the Glass sound.
+Both carry the project's image when there is one: the nearest .claude/notification.{png,jpg,jpeg,gif}
+walking up from the session folder, so ~/.claude/notification.png is the default for every project
+under the home folder.
 Never raises.
 """
 import json, os, re, subprocess, sys
 
 FOCUS = os.path.expanduser("~/.claude/hooks/focus-terminal.py")
 NOTIFIER = next((p for p in ("/opt/homebrew/bin/terminal-notifier", "/usr/local/bin/terminal-notifier") if os.path.exists(p)), "terminal-notifier")
+IMAGE_NAMES = ("notification.png", "notification.jpg", "notification.jpeg", "notification.gif")
+
+
+def project_image(cwd):
+    """The image shown in the notification: the nearest .claude/notification.* from the session
+    folder upwards (which reaches ~/.claude when the project is under the home folder), else
+    ~/.claude/notification.* explicitly, else None."""
+    dirs, d = [], os.path.abspath(cwd or os.getcwd())
+    while True:
+        dirs.append(d)
+        parent = os.path.dirname(d)
+        if parent == d:
+            break
+        d = parent
+    dirs.append(os.path.expanduser("~"))
+    for d in dirs:
+        for n in IMAGE_NAMES:
+            p = os.path.join(d, ".claude", n)
+            if os.path.isfile(p):
+                return p
+    return None
 
 
 def ancestors():
@@ -64,10 +88,13 @@ def notify(title, text, sound, cwd):
     q = lambda a: "'" + a.replace("'", "'\\''") + "'"
     root = os.environ.get("CLAUDE_VSCODE_ROOT", "")
     execute = " ".join(["/usr/bin/python3", "-I", q(FOCUS), q(",".join(map(str, ancestors()))), q(root), q(cwd or ""), q(title)])
+    cmd = [NOTIFIER, "-title", title, "-message", text, "-sound", sound,
+           "-execute", execute, "-group", f"claude-code-{os.getpid()}"]
+    image = project_image(cwd)
+    if image:
+        cmd += ["-contentImage", image]
     try:
-        subprocess.run([NOTIFIER, "-title", title, "-message", text, "-sound", sound,
-                        "-execute", execute, "-group", f"claude-code-{os.getpid()}"],
-                       capture_output=True, timeout=10)
+        subprocess.run(cmd, capture_output=True, timeout=10)
     except Exception:
         pass
 

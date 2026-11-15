@@ -6,6 +6,10 @@ extension version in `vscode-extension/extension/package.json`.
 
 ## [Unreleased]
 
+### Added
+- Per-project notification image: the nearest `.claude/notification.{png,jpg,jpeg,gif}` from the
+  session folder upwards is attached to the banner, with `~/.claude/notification.png` as default.
+
 ## [0.2.0] - 2026-11-15
 
 First public release.
