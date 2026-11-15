@@ -19,7 +19,7 @@ jobs:
       - name: Extension and manifest versions agree
         run: |
           PKG=$(node -p "require('./vscode-extension/extension/package.json').version")
-          MAN=$(grep -o 'Version="[0-9.]*"' vscode-extension/extension.vsixmanifest | head -1 | cut -d'"' -f2)
+          MAN=$(grep -o '<Identity [^>]*Version="[0-9.]*"' vscode-extension/extension.vsixmanifest | grep -o 'Version="[0-9.]*"' | cut -d'"' -f2)
           echo "package.json=$PKG vsixmanifest=$MAN"
           test "$PKG" = "$MAN"
       - name: Shell scripts
