@@ -24,8 +24,8 @@ jobs:
           test "$PKG" = "$MAN"
       - name: Shell scripts
         run: |
-          bash -n install.sh uninstall.sh scripts/record-demo.sh
-          shellcheck -S warning install.sh uninstall.sh scripts/record-demo.sh
+          bash -n install.sh uninstall.sh
+          shellcheck -S warning install.sh uninstall.sh
       - name: VSIX builds
         run: |
           cd vscode-extension && python3 - /tmp/test.vsix <<'PY'

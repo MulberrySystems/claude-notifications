@@ -1,4 +1,2 @@
 *.vsix
 .DS_Store
-docs/*.mov
-docs/*.mp4

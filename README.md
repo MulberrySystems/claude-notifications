@@ -8,7 +8,7 @@ A macOS notification when a [Claude Code](https://docs.anthropic.com/en/docs/cla
 needs your input or finishes a turn. **Click it and VS Code jumps to the exact terminal that runs
 that session**, even with several windows and a dozen tabs open.
 
-<!-- demo: docs/demo.gif -->
+<!-- screenshot: docs/screenshot.png -->
 
 - Titled with the terminal tab title, so you know which session it is before you look.
 - Silent while you are already looking at that terminal in a focused VS Code window.
@@ -98,11 +98,6 @@ Debug log: `~/.claude/terminal-focus.log` (written by the extension and the clic
   not viewing.
 - **The icon is a generic terminal.** macOS takes the icon from the sending app bundle; it cannot
   be changed from here.
-
-## Recording the demo
-
-`scripts/record-demo.sh` records your screen for a few seconds, fires a sample notification, and
-converts the clip to `docs/demo.gif` with ffmpeg. Click the notification while it records.
 
 ## Contributing
 
