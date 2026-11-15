@@ -1,0 +1,48 @@
+name: Bug report
+description: Something does not notify, or the click does not focus the right terminal
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: "sw_vers -productVersion"
+    validations:
+      required: true
+  - type: input
+    id: vscode
+    attributes:
+      label: VS Code version
+      placeholder: "code --version | head -1"
+    validations:
+      required: true
+  - type: input
+    id: claude
+    attributes:
+      label: Claude Code version
+      placeholder: "claude --version"
+    validations:
+      required: true
+  - type: dropdown
+    id: how
+    attributes:
+      label: How does Claude Code run?
+      options:
+        - In a VS Code integrated terminal
+        - In a VS Code integrated terminal, inside a .code-workspace
+        - Somewhere else (say where below)
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Debug log
+      description: Relevant lines from ~/.claude/terminal-focus.log and, if the notification itself is missing, the output of `terminal-notifier -title test -message ok`.
+      render: text
