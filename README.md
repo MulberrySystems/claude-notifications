@@ -51,13 +51,13 @@ To check, run `/hooks` in Claude Code and start a turn; you should get a notific
 Every notification can carry an image on the right of the banner, chosen per repository, so you
 can tell projects apart at a glance. Two banners from the same machine:
 
-| Example 1: a global default | Example 2: this repo's own image |
+| Example 1: this repo's own image | Example 2: the global default |
 |:---:|:---:|
 | <img src="docs/examples/banner-meme-man.png" width="380" alt="banner with Meme Man"> | <img src="docs/examples/banner-pixel-creature.png" width="380" alt="banner with a pixel creature"> |
 
-Example 2 uses [`docs/examples/pixel-creature.png`](docs/examples/pixel-creature.png), which this
-repo also keeps at `.claude/notification.png`, so sessions in it get the creature while every
-other project on the machine gets the default from example 1.
+Example 2 uses [`docs/examples/pixel-creature.png`](docs/examples/pixel-creature.png) installed
+as `~/.claude/notification.png`, so every project on the machine gets the creature unless it
+brings its own. Example 1 is this repo overriding that with its own `.claude/notification.png`.
 
 **Per repository.** Put the image at `.claude/notification.png` (or `.jpg`, `.jpeg`, `.gif`) in
 the repo. Sessions started anywhere inside that repo use it:
