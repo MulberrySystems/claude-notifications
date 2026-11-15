@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python hooks compile
+        run: python3 -m py_compile hooks/*.py
+      - name: Extension parses
+        run: |
+          node --check vscode-extension/extension/extension.js
+          node -e "JSON.parse(require('fs').readFileSync('vscode-extension/extension/package.json','utf8'))"
+      - name: Extension and manifest versions agree
+        run: |
+          PKG=$(node -p "require('./vscode-extension/extension/package.json').version")
+          MAN=$(grep -o 'Version="[0-9.]*"' vscode-extension/extension.vsixmanifest | head -1 | cut -d'"' -f2)
+          echo "package.json=$PKG vsixmanifest=$MAN"
+          test "$PKG" = "$MAN"
+      - name: Shell scripts
+        run: |
+          bash -n install.sh uninstall.sh scripts/record-demo.sh
+          shellcheck -S warning install.sh uninstall.sh scripts/record-demo.sh
+      - name: VSIX builds
+        run: |
+          cd vscode-extension && python3 - /tmp/test.vsix <<'PY'
+          import sys, zipfile
+          z = zipfile.ZipFile(sys.argv[1], "w", zipfile.ZIP_DEFLATED)
+          for n in ["[Content_Types].xml", "extension.vsixmanifest", "extension/package.json", "extension/extension.js"]:
+              z.write(n, n)
+          z.close()
+          print(zipfile.ZipFile(sys.argv[1]).namelist())
+          PY
